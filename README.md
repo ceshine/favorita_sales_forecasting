@@ -10,6 +10,12 @@ Test environment:
 4. Docker 17.12.0-ce
 5. Nvidia-docker 2.0
 
+## Acknowledgement
+
+1. Transformer model comes from [Yu-Hsiang Huang's implementation](https://github.com/jadore801120/attention-is-all-you-need-pytorch). His repo is included in "*attention-is-all-you-need-pytorch*" folder via *git subtree*.
+2. LSTNet model is largely inspired from [GUOKUN LAI's implementation](https://github.com/laiguokun/LSTNet).
+3. The code structure is inspired by the work of  [Sean Vasquez](https://github.com/sjvasquez/web-traffic-forecasting) and [Arthur Suilin](https://github.com/Arturus/kaggle-web-traffic). 
+
 ## Docker Usage
 
 First build the image. Example command: `docker build -t favorita .`
