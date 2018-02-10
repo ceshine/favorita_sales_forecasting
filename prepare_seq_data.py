@@ -5,6 +5,7 @@ from datetime import date, timedelta
 import pandas as pd
 import numpy as np
 from sklearn import preprocessing
+import joblib
 
 from preprocess import read_data
 LOOKBACK = 56
@@ -143,8 +144,8 @@ def main():
         if is_train:
             y = get_timespan(df_sales, ty2, 0, 16).values.astype("float64")
             x[:, -15:, 0] = y[nonzero, :15]
-            return x, x_int, y[nonzero, :]
-        return x, x_int
+            return x, x_int, y[nonzero, :], sales_year2[nonzero].index
+        return x, x_int, sales_year2[nonzero].index
 
     def fill_train_data(path_prefix, ty1, ty2, current_cnt=0):
         assert ty1.weekday() == 2
@@ -153,9 +154,7 @@ def main():
             "%07d" % current_cnt,
             ty1 - timedelta(days=LOOKBACK), ty1, ty1 + timedelta(days=15),
             ty2 - timedelta(days=LOOKBACK), ty2, ty2 + timedelta(days=15))
-        x_tmp, x_i_tmp, y_tmp = prepare_dataset(
-            ty1, ty2
-        )
+        x_tmp, x_i_tmp, y_tmp, idx_store_item = prepare_dataset(ty1, ty2)
         if current_cnt == 0:
             x = np.memmap(
                 "cache/x{}_seq.npy".format(path_prefix), mode="w+",
@@ -189,30 +188,30 @@ def main():
         x.flush()
         x_i.flush()
         y.flush()
-        return current_cnt
+        return current_cnt, idx_store_item
 
     print("Preparing dataset...")
     # Train
     ty1 = date(2016, 6, 29) - timedelta(days=4 * 7)
     ty2 = date(2017, 6, 28) - timedelta(days=4 * 7)
-    current_cnt = fill_train_data("train", ty1, ty2, 0)
+    current_cnt, _ = fill_train_data("train", ty1, ty2, 0)
     for i in range(1, 6):
         delta = timedelta(days=7 * i)
-        current_cnt = fill_train_data(
+        current_cnt, _ = fill_train_data(
             "train", ty1 + delta, ty2 + delta, current_cnt)
 
     ty1 = date(2015, 7, 1)
     ty2 = date(2016, 6, 29)
     for i in range(0, 11, 2):
         delta = timedelta(days=7 * i)
-        current_cnt = fill_train_data(
+        current_cnt, _ = fill_train_data(
             "train", ty1 + delta, ty2 + delta, current_cnt)
 
     ty1 = date(2014, 7, 2)
     ty2 = date(2015, 7, 1)
     for i in range(0, 11, 2):
         delta = timedelta(days=7 * i)
-        current_cnt = fill_train_data(
+        current_cnt, _ = fill_train_data(
             "train", ty1 + delta, ty2 + delta, current_cnt)
 
     print("Train count", current_cnt)
@@ -220,11 +219,13 @@ def main():
     # Validation
     ty1 = date(2016, 7, 27)
     ty2 = date(2017, 7, 26)
-    current_cnt = fill_train_data("val", ty1, ty2, 0)
+    current_cnt, idx_store_item = fill_train_data("val", ty1, ty2, 0)
+    joblib.dump(idx_store_item, "cache/val_idx.pkl")
     print("Val count", current_cnt)
 
-    x_test, x_i_test = prepare_dataset(
+    x_test, x_i_test, idx_store_item = prepare_dataset(
         date(2016, 8, 17), date(2017, 8, 16), is_train=False)
+    joblib.dump(idx_store_item, "cache/test_idx.pkl")
     x = np.memmap("cache/xtest_seq.npy", mode="w+", order="C", dtype="float64",
                   shape=(x_test.shape[0], x_test.shape[1], x_test.shape[2]))
     x_i = np.memmap("cache/xtest_i_seq.npy", mode="w+", order="C", dtype="int16",
