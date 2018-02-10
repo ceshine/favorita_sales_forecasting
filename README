@@ -1,0 +1,28 @@
+# (Simplified) Solution to Favorita Competition
+
+Sorry, no CPU-only mode. You have to use an nvidia card to train models.
+
+Test environment:
+1. GTX 1070
+2. 16 GB RAM + 8 GB Swap
+3. At least 30 GB free disk space
+  - (it can be less if you turn off some of the joblib disk caching)
+4. Docker 17.12.0-ce
+5. Nvidia-docker 2.0
+
+## Docker Usage
+
+First build the image. Example command: `docker build -t favorita .`
+
+Then spin up a docker container:
+```
+docker run --runtime=nvidia --rm -ti \
+    -v /mnt/Data/favorita_cache:/home/docker/labs/cache \
+    -v /mnt/Data/favorita_data:/home/docker/labs/data \
+    -p 6006:6006 favorita bash
+```
+
+* It is recommended to manually mount the data and cache folder
+* port 6006 is for running tensorboard inside the container
+
+We're going to assume you're using the BASH prompt inside the container in the rest of this README.
