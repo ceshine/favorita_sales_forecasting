@@ -26,3 +26,7 @@ docker run --runtime=nvidia --rm -ti \
 * port 6006 is for running tensorboard inside the container
 
 We're going to assume you're using the BASH prompt inside the container in the rest of this README.
+
+## Model Training
+
+(Documentation WIP)
