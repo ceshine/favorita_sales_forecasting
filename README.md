@@ -14,7 +14,7 @@ Test environment:
 
 1. Transformer model comes from [Yu-Hsiang Huang's implementation](https://github.com/jadore801120/attention-is-all-you-need-pytorch). His repo is included in "*attention-is-all-you-need-pytorch*" folder via *git subtree*.
 2. LSTNet model is largely inspired from [GUOKUN LAI's implementation](https://github.com/laiguokun/LSTNet).
-3. The code structure is inspired by the work of  [Sean Vasquez](https://github.com/sjvasquez/web-traffic-forecasting) and [Arthur Suilin](https://github.com/Arturus/kaggle-web-traffic). 
+3. The model structure is inspired by the work of  [Sean Vasquez](https://github.com/sjvasquez/web-traffic-forecasting) and [Arthur Suilin](https://github.com/Arturus/kaggle-web-traffic).
 
 ## Docker Usage
 
@@ -30,6 +30,9 @@ docker run --runtime=nvidia --rm -ti \
 
 * It is recommended to manually mount the data and cache folder
 * port 6006 is for running tensorboard inside the container
+
+### Where to put the data
+Download and extract the [data files from Kaggle](https://www.kaggle.com/c/favorita-grocery-sales-forecasting/data) into `data` folder.
 
 We're going to assume you're using the BASH prompt inside the container in the rest of this README.
 
