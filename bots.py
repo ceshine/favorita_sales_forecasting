@@ -74,7 +74,7 @@ class BaseBot:
         self.logger.propagate = False
         self.tbwriter = SummaryWriter(
             "runs/" + datetime.now().strftime("%Y%m%d-%H%M") + "-" +
-            self.name + "-" + os.environ.get("FAVORITA_VER", "v10")
+            self.name
         )
 
     def prepare_batch(self, tensors, volatile=False):

@@ -38,4 +38,38 @@ We're going to assume you're using the BASH prompt inside the container in the r
 
 ## Model Training
 
-(Documentation WIP)
+### Preprocessing
+
+```
+python prepare_seq_data.py
+```
+
+### Train Model
+
+For now there are two types of model ready to be trained:
+1. Transformer (fit_transformer.py)
+2. LSTNet (fit_lstnet.py)
+
+The training scripts use [Sacred](http://sacred.readthedocs.io/en/latest/) to manage experiments. It is recommended to set a seed explicitly via CLI:
+
+```
+python fit_transformer.py with seed=93102
+```
+
+You can also use Mongo to save experiment results and hyper-parameters for each run. Please refer to the Sacred documentation for more details.
+
+### Tensorboard
+
+Training and validation loss curves, and some of the embeddings are logged in tensorboard format. Launch tensorboad via:
+
+```
+tensorboard --logdir runs
+```
+
+Then visit http://localhost:6006 for the web interface.
+
+## TODO (For now you need to figure them out yourself)
+
+1. Ensembling script: I made some changes to the outputs of model training scripts so they are more readable. But that means ensembling script needs to be updated as well. (For those who want to try: the ground truth for validation set is stored in `cache/yval_seq.npy`.)
+2. Encoder/Decoder and Encoder/MLP models with LSTM, GRU, QRNN, SRU units: I tried a lot of different stuffs for this competition. But I feel the code could use some refactoring, so they are removed for now.
+3. Tabular data preparation and models: My GBM models is mediocre at best, so not really worth sharing here. But as I mentioned in the blog post. For those store/item combination that were removed by the 56-day nonzero filter, using a GBM model to predict values for them will give you a better score than predicting zeros.
