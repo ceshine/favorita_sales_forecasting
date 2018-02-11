@@ -58,6 +58,10 @@ python fit_transformer.py with seed=93102
 
 You can also use Mongo to save experiment results and hyper-parameters for each run. Please refer to the Sacred documentation for more details.
 
+### Prediction for Validation and Testing Dataset
+
+The CSV output will be saved in `cache/preds/val/` and `cache/preds/test/` respectively.
+
 ### Tensorboard
 
 Training and validation loss curves, and some of the embeddings are logged in tensorboard format. Launch tensorboad via:
